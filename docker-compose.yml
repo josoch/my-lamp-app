@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1215Jack_01
+      MYSQL_DATABASE: agency
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  web:
+    build: .
+    ports:
+      - "8010:80"
+    depends_on:
+      - db
+    volumes:
+      - ./html:/var/www/html
+    environment:
+      - MYSQL_HOST=db  # This is crucial for phpmyadmin to connect to the correct database
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8020:80"  # Access phpMyAdmin on port 8020
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_USER: admin_user   # Replace with your database user
+      PMA_PASSWORD: 10_kcaJ5121   # Replace with your database password
+      PMA_VERBOSE_LOGIN: 1    #Optional, display more detail during login
+volumes:
+  db_data:
